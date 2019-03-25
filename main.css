@@ -1,0 +1,35 @@
+*{
+  padding: 0;
+  margin: 0;
+  font-family: 'Helvetica';
+}
+body{
+  background-color: rgb(255, 255, 255);
+}
+
+.container{
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.super-large{
+  font-size: 10vw;
+  color: rgb(201, 201, 201);
+  font-weight: 900;
+  transition-duration: 2s;
+  cursor: pointer;
+  user-select: none;
+  letter-spacing: -8px;
+}
+
+
+.super-large:hover{
+  color: rgb(238, 238, 238);
+}
+
+#canv {
+	box-shadow: 0 1px #FFFFFF inset, 0 1px 3px rgba(34, 25, 25, 0.4);
+}
