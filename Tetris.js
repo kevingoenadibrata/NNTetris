@@ -50,4 +50,25 @@ class Tetris{
         this.ctx.fillStyle = 'rgb(147, 39, 129)';
         this.ctx.fillRect(this.tileSize * x, this.tileSize * y + this.topPad, this.tileSize, this.tileSize);
     }
+
+    spawnPiece = () => {
+        var shapeId = Math.floor((Math.random() * NUM_SHAPE) + 1);
+        return SHAPE_DICT[shapeId].slice();
+    }
+
+    moveLeft = () => {
+
+    }
+
+    moveRight = () => {
+
+    }
+
+    rotate = () => {
+
+    }
+
+    dropblock = () => {
+        
+    }
 }
