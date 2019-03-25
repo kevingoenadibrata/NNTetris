@@ -53,14 +53,40 @@ class Tetris{
 
     spawnPiece = () => {
         var shapeId = Math.floor((Math.random() * NUM_SHAPE) + 1);
-        return SHAPE_DICT[shapeId].slice();
+        return shapeId;
     }
 
     moveLeft = () => {
 
+        //check valid to move left
+        var valid = true;
+        for (var i = 0; i < this.activePiece.cells[this.activePiece.currRot].length; i++) {
+            if(this.activePiece.cells[i].x - 1 < 0){
+                valid = false;
+            }
+        }
+
+        //move left if valid
+        for (var i = 0; i < this.activePiece.cells[this.activePiece.currRot].length; i++) {
+            this.activePiece.cells[i].x = this.activePiece.cells[i].x - 1;
+        }
+
     }
 
     moveRight = () => {
+
+       //check valid to move right
+        var valid = true;
+        for (var i = 0; i < this.activePiece.cells[this.activePiece.currRot].length; i++) {
+            if(this.activePiece.cells[i].x + 1 >= this.activePiece.cells[this.activePiece.currRot].length){
+                valid = false;
+            }
+        }
+
+        //move left if right
+        for (var i = 0; i < this.activePiece.cells[this.activePiece.currRot].length; i++) {
+            this.activePiece.cells[i].x = this.activePiece.cells[i].x + 1;
+        }
 
     }
 
@@ -69,6 +95,6 @@ class Tetris{
     }
 
     dropblock = () => {
-        
+
     }
 }
