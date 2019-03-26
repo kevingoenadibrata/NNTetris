@@ -21,7 +21,7 @@ function start(){
 
 	});
     
-    interval = setInterval(tet.mainLoop, 20);
+    interval = setInterval(tet.mainLoop, 200);
 }
 
 
