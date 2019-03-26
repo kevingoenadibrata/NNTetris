@@ -272,63 +272,61 @@ class Tetris{
     }
 
     rotate = () => {
+        var valid = false;
+        var initRotation = this.activePiece.currentRotation;
+        var rotationIdxResult = this.activePiece.currentRotation;
 
+        while(!valid && (rotationIdxResult+1)%4 != initRotation){
+            rotationIdxResult = (rotationIdxResult+1)%4;
+
+            //check if valid
+            var validFlag = 1;
+            var currCells = this.activePiece.cells[rotationIdxResult];
+            for (var i = 0; i < currCells.length; i++) {
+                var currX = currCells[i].x;
+                var currY = currCells[i].y + 2;
+
+                if(currX < 0 || currX > this.grid.length-1){
+                    validFlag = 0;
+                    break;
+                }
+                else if(currY < 0 || currY > this.grid[0].length-1){
+                    validFlag = 0;
+                    break;
+                }
+                else if(this.grid[currX][currY].val == 2){
+                    validFlag = 0;
+                    break;
+                }
+
+
+            }
+            if(validFlag == 1){
+                valid = true;
+                break;
+            }
+
+        }
+
+        if(valid){
+            this.setGridByBlock(this.activePiece.getCurrentCells(), 0);
+            this.activePiece.currentRotation = rotationIdxResult;
+            this.setGridByBlock(this.activePiece.getCurrentCells(), 1);
+        }
+    }
+
+    setGridByBlock = (block, val) => {
+        for(let i = 0; i < block.length; i++){
+            this.grid[block[i].x][block[i].y+2].val = val;
+            this.grid[block[i].x][block[i].y+2].color = block[i].color;
+
+        }
     }
 
     dropblock = () => {
-
-        //check the y border line
-        var y_border = this.grid[0].length-1;
-
-        var difference = -1; //initially don't know how much to go down
-
-        for (var i = 0; i < this.activePiece.getCurrentCells().length; i++) {
-            //get grid perspective
-            var currX = this.activePiece.getCurrentCells()[i].x;
-            var currY = this.activePiece.getCurrentCells()[i].y+2;
-
-            while((currY+1) < this.grid[0].length && this.grid[currX][currY+1].val != 2){
-                currY++;
-            }
-            // console.log("currX: " + currX);
-            // console.log("currY: " + currY);
-
-            //get the lowest border line y and the minimal difference of going down
-            if(currY <= y_border || currY - this.activePiece.getCurrentCells()[i].y - 2 < difference){
-                
-                y_border = currY;
-                difference = currY - this.activePiece.getCurrentCells()[i].y - 2;
-            }
-        }
-
-        // console.log("difference: " + difference);
-        //drop block
-        for (var i = 0; i < this.activePiece.getCurrentCells().length; i++) {
-
-            // reset current grid status
-            var currX = this.activePiece.getCurrentCells()[i].x;
-            var currY = this.activePiece.getCurrentCells()[i].y+2;
-
-            this.grid[currX][currY].val = 0;
-
-
-            this.activePiece.getCurrentCells()[i].y = this.activePiece.getCurrentCells()[i].y + difference;
-            currY = this.activePiece.getCurrentCells()[i].y + 2;
-
-            console.log("currX: " + currX);
-            console.log("currY: " + currY); 
-
-            //update next grid status
-            this.grid[currX][currY].val = 1;
-            this.grid[currX][currY].color = this.activePiece.getCurrentCells()[i].color;
-
-
-
-
-        }
+        while(this.canFall()) this.fallPiece();
         this.lockPiece();
         this.drawGrid();
-        this.drawPieces();      
-
+        this.drawPieces();
     }
 }
