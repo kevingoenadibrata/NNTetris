@@ -272,7 +272,55 @@ class Tetris{
     }
 
     rotate = () => {
+        var valid = false;
+        var initRotation = this.activePiece.currentRotation;
+        var rotationIdxResult = this.activePiece.currentRotation;
 
+        while(!valid && (rotationIdxResult+1)%4 != initRotation){
+            rotationIdxResult = (rotationIdxResult+1)%4;
+
+            //check if valid
+            var validFlag = 1;
+            var currCells = this.activePiece.cells[rotationIdxResult];
+            for (var i = 0; i < currCells.length; i++) {
+                var currX = currCells[i].x;
+                var currY = currCells[i].y + 2;
+
+                if(currX < 0 || currX > this.grid.length-1){
+                    validFlag = 0;
+                    break;
+                }
+                else if(currY < 0 || currY > this.grid[0].length-1){
+                    validFlag = 0;
+                    break;
+                }
+                else if(this.grid[currX][currY].val == 2){
+                    validFlag = 0;
+                    break;
+                }
+
+
+            }
+            if(validFlag == 1){
+                valid = true;
+                break;
+            }
+
+        }
+
+        if(valid){
+            this.setGridByBlock(this.activePiece.getCurrentCells(), 0);
+            this.activePiece.currentRotation = rotationIdxResult;
+            this.setGridByBlock(this.activePiece.getCurrentCells(), 1);
+        }
+    }
+
+    setGridByBlock = (block, val) => {
+        for(let i = 0; i < block.length; i++){
+            this.grid[block[i].x][block[i].y+2].val = val;
+            this.grid[block[i].x][block[i].y+2].color = block[i].color;
+
+        }
     }
 
     dropblock = () => {
