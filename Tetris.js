@@ -276,59 +276,9 @@ class Tetris{
     }
 
     dropblock = () => {
-
-        //check the y border line
-        var y_border = this.grid[0].length-1;
-
-        var difference = -1; //initially don't know how much to go down
-
-        for (var i = 0; i < this.activePiece.getCurrentCells().length; i++) {
-            //get grid perspective
-            var currX = this.activePiece.getCurrentCells()[i].x;
-            var currY = this.activePiece.getCurrentCells()[i].y+2;
-
-            while((currY+1) < this.grid[0].length && this.grid[currX][currY+1].val != 2){
-                currY++;
-            }
-            // console.log("currX: " + currX);
-            // console.log("currY: " + currY);
-
-            //get the lowest border line y and the minimal difference of going down
-            if(currY <= y_border || currY - this.activePiece.getCurrentCells()[i].y - 2 < difference){
-                
-                y_border = currY;
-                difference = currY - this.activePiece.getCurrentCells()[i].y - 2;
-            }
-        }
-
-        // console.log("difference: " + difference);
-        //drop block
-        for (var i = 0; i < this.activePiece.getCurrentCells().length; i++) {
-
-            // reset current grid status
-            var currX = this.activePiece.getCurrentCells()[i].x;
-            var currY = this.activePiece.getCurrentCells()[i].y+2;
-
-            this.grid[currX][currY].val = 0;
-
-
-            this.activePiece.getCurrentCells()[i].y = this.activePiece.getCurrentCells()[i].y + difference;
-            currY = this.activePiece.getCurrentCells()[i].y + 2;
-
-            console.log("currX: " + currX);
-            console.log("currY: " + currY); 
-
-            //update next grid status
-            this.grid[currX][currY].val = 1;
-            this.grid[currX][currY].color = this.activePiece.getCurrentCells()[i].color;
-
-
-
-
-        }
+        while(this.canFall()) this.fallPiece();
         this.lockPiece();
         this.drawGrid();
-        this.drawPieces();      
-
+        this.drawPieces();
     }
 }
