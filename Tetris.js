@@ -1,6 +1,7 @@
 class Tetris{
-    constructor(canvId){
+    constructor(canvId, reset_func){
         /* VARIABLES */
+        this.reset = reset_func;
         this.cols = 10;
         this.rows = 22;
         this.tileSize = 15;
@@ -30,13 +31,33 @@ class Tetris{
             this.lockPiece();
         }
 
+        // game over
+        if (this.gameOver()) {
+            console.log("Game Over");
+        }
 
         this.drawGrid();
         this.drawPieces();
     }
 
+    gameOver = () => {
+        // if (y+1 < 0 && y+1.grid == locked), then game over
+        const currCell = this.activePiece.getCurrentCells();
+
+        for (let i = 0; i < currCell.length; i++) {
+            let currY = currCell[i].y;
+
+            if (currY + 1 < 0 && !this.canFall()) {
+                console.log("Game Over");
+                this.reset();
+                // delete interval
+                // print out game over
+            }
+        }
+    }
+
     lockPiece = () => {
-        // copy active piece ke grid
+        // copy active piece to grid
         for (let j = 0; j < this.activePiece.getCurrentCells().length; j++) {
             const cell = this.activePiece.cells[this.activePiece.currentRotation][j];
             this.grid[cell.x][cell.y+2].val = 2;
@@ -76,12 +97,16 @@ class Tetris{
     }
 
     canFall = () => {
-        // if ((y+1 out of bounds) || (y+1) == 2, return false;
+        // if (y+1 out of bounds) || (y+1) == 2, return false;
+        
         const currCell = this.activePiece.getCurrentCells();
 
         for (let i = 0; i < currCell.length; i++) {
-            if (currCell[i].y+2+1 > 23) return false;
-            if (this.grid[currCell[i].x][currCell[i].y+2+1].val == 2) return false;
+            let currX = currCell[i].x;
+            let currY = currCell[i].y + 2;
+
+            if (currY + 1 > 23) return false;
+            if (this.grid[currX][currY+1].val == 2) return false;
         }
 
         return true;
@@ -114,7 +139,7 @@ class Tetris{
     drawPieces = () => {
         for (let i = 0; i < this.grid.length; i++) {
             for (let j = 0; j < this.grid[i].length; j++) {
-                if (this.grid[i][j].val != 0) {
+                if (this.grid[i][j].val != 0 && this.grid[i][j].y >= 0) {
                     this.drawCell(this.grid[i][j]);
                 }
             }
