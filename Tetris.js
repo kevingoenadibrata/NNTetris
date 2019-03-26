@@ -85,6 +85,7 @@ class Tetris{
                 if(i == this.activePiece.currentRotation){
                     const cell = this.activePiece.cells[i][j];
                     this.grid[cell.x][cell.y+2].val = 1;
+                    this.grid[cell.x][cell.y+2].color = cell.color;
                 }
             }
         }
@@ -98,7 +99,7 @@ class Tetris{
 
     canFall = () => {
         // if (y+1 out of bounds) || (y+1) == 2, return false;
-        
+
         const currCell = this.activePiece.getCurrentCells();
 
         for (let i = 0; i < currCell.length; i++) {
@@ -110,7 +111,7 @@ class Tetris{
         }
 
         return true;
-        
+
     }
 
     drawGrid = () => {
@@ -147,7 +148,7 @@ class Tetris{
     }
 
     drawCell = (cell) => {
-        this.ctx.fillStyle = 'rgb(147, 39, 129)';
+        this.ctx.fillStyle = cell.color;
         this.ctx.fillRect(this.tileSize * cell.x, this.tileSize * cell.y + this.topPad, this.tileSize, this.tileSize);
     }
 
@@ -175,7 +176,7 @@ class Tetris{
                 for (var j = 0; j < this.activePiece.cells[i].length; j++) {
                     var currX = this.activePiece.cells[i][j].x;
                     var currY = this.activePiece.cells[i][j].y + 2;
-                    
+
                     //reset grid color val to 0, white
                     if(i == this.activePiece.currentRotation){
                         this.grid[currX][currY].val = 0;
@@ -183,7 +184,7 @@ class Tetris{
 
                     this.activePiece.cells[i][j].x = this.activePiece.cells[i][j].x - 1;
                     // currX = this.activePiece.cells[i][j].x;
-                }  
+                }
             }
 
             for (var i = 0; i < this.activePiece.getCurrentCells().length; i++) {
@@ -192,15 +193,16 @@ class Tetris{
 
                 //set val of grid to 1
                 this.grid[currX][currY].val = 1;
-                    
-                
+                this.grid[currX][currY].color = this.activePiece.getCurrentCells()[i].color;
+
+
             }
-            
+
 
             this.drawGrid();
             this.drawPieces();
         }
-        
+
 
     }
 
@@ -223,7 +225,7 @@ class Tetris{
                 for (var j = 0; j < this.activePiece.cells[i].length; j++) {
                     var currX = this.activePiece.cells[i][j].x;
                     var currY = this.activePiece.cells[i][j].y + 2;
-                    
+
                     //reset grid color val to 0, white
                     if(i == this.activePiece.currentRotation){
                         this.grid[currX][currY].val = 0;
@@ -231,7 +233,7 @@ class Tetris{
 
                     this.activePiece.cells[i][j].x = this.activePiece.cells[i][j].x + 1;
                     // currX = this.activePiece.cells[i][j].x;
-                }  
+                }
             }
 
             for (var i = 0; i < this.activePiece.getCurrentCells().length; i++) {
@@ -240,15 +242,16 @@ class Tetris{
 
                 //set val of grid to 1
                 this.grid[currX][currY].val = 1;
-                    
-                
+                this.grid[currX][currY].color = this.activePiece.getCurrentCells()[i].color;
+
+
             }
-            
+
 
             this.drawGrid();
             this.drawPieces();
         }
-        
+
 
     }
 

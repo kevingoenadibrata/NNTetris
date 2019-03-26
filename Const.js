@@ -5,12 +5,12 @@ function Cell(x, y, val, color){
     this.color = color;
 }
 
-function cellify(grid, size){
+function cellify(grid, size, color){
     let cells = [[],[],[],[]];
     for(let i = 0; i < grid.length; i++){
         for(let j = 0; j < grid[i].length; j++){
             if(grid[i][j] == 1){
-                cells[i].push(new Cell(j%size + (size == 2 ? 4 : 3), Math.floor(j/size)-2, 1, ""));
+                cells[i].push(new Cell(j%size + (size == 2 ? 4 : 3), Math.floor(j/size)-2, 1, color));
             }
         }
     }
@@ -43,7 +43,7 @@ let IShape = cellify([
         0,1,0,0,
         0,1,0,0
     ]
-], 4);
+], 4, "#00bcd4");
 
 let JShape = cellify([
     [
@@ -66,7 +66,7 @@ let JShape = cellify([
         0,1,0,
         1,1,0
     ],
-], 3);
+], 3, "#3f51b5");
 
 let LShape = cellify([
     [
@@ -89,7 +89,7 @@ let LShape = cellify([
         0,1,0,
         0,1,0
     ],
-], 3);
+], 3, "#ff9800");
 
 let SShape = cellify([
     [
@@ -112,7 +112,7 @@ let SShape = cellify([
         1,1,0,
         0,1,0
     ],
-], 3);
+], 3, "#4caf50");
 
 let ZShape = cellify([
     [
@@ -135,7 +135,7 @@ let ZShape = cellify([
         1,1,0,
         1,0,0
     ],
-], 3);
+], 3, "#f44336");
 
 let TShape = cellify([
     [
@@ -158,7 +158,7 @@ let TShape = cellify([
         1,1,0,
         0,1,0
     ],
-], 3);
+], 3, "#9c27b0");
 
 let OShape = cellify([
     [
@@ -177,7 +177,7 @@ let OShape = cellify([
         1,1,
         1,1
     ]
-], 2);
+], 2, "#ffeb3b");
 
 const SHAPE_DICT = {
     0: copyArray(IShape),
@@ -186,7 +186,7 @@ const SHAPE_DICT = {
     3: copyArray(SShape),
     4: copyArray(ZShape),
     5: copyArray(TShape),
-    6: copyArray(OShape)   
+    6: copyArray(OShape)
 };
 
 function copyArray(obj){
@@ -197,5 +197,4 @@ const NUM_SHAPE = 7;
 const LEFT_CODE = 37;
 const UP_CODE = 38;
 const RIGHT_CODE = 39;
-const SPACE_CODE = 40;
-
+const SPACE_CODE = 32;
