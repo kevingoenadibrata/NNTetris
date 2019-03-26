@@ -8,6 +8,7 @@ class Tetris{
         this.topPad = 50;
         this.canvas = document.getElementById(canvId);
         this.ctx = this.canvas.getContext('2d');
+        this.bag = [];
         this.grid = [];
         this.activePiece = new ActivePiece(this.spawnPiece());
         /*           */
@@ -93,8 +94,30 @@ class Tetris{
     }
 
     spawnPiece = () => {
-        var shapeId = Math.floor((Math.random() * NUM_SHAPE));
-        return shapeId;
+        console.log(this.bag);
+        if(this.bag.length == 0) this.bag = this.shuffle([0,1,2,3,4,5,6]);
+
+        return this.bag.pop();
+    }
+
+    shuffle = (a) => {
+        var array = a.slice();
+    	var currentIndex = array.length;
+    	var temporaryValue, randomIndex;
+
+    	// While there remain elements to shuffle...
+    	while (0 !== currentIndex) {
+    		// Pick a remaining element...
+    		randomIndex = Math.floor(Math.random() * currentIndex);
+    		currentIndex -= 1;
+
+    		// And swap it with the current element.
+    		temporaryValue = array[currentIndex];
+    		array[currentIndex] = array[randomIndex];
+    		array[randomIndex] = temporaryValue;
+    	}
+
+    	return array;
     }
 
     canFall = () => {
@@ -152,14 +175,8 @@ class Tetris{
         this.ctx.fillRect(this.tileSize * cell.x, this.tileSize * cell.y + this.topPad, this.tileSize, this.tileSize);
     }
 
-    spawnPiece = () => {
-        var shapeId = Math.floor((Math.random() * NUM_SHAPE));
-        return shapeId;
-    }
-
 
     moveLeft = () => {
-        console.log("left");
         //check valid to move left
         var valid = true;
         for (var i = 0; i < this.activePiece.getCurrentCells().length; i++) {
@@ -207,7 +224,6 @@ class Tetris{
     }
 
     moveRight = () => {
-        console.log("right");
 
         //check valid to move right
         var valid = true;
