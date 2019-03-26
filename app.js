@@ -5,7 +5,6 @@ function start(){
     tet = new Tetris('canv', endGame);
 
     window.addEventListener('keydown', function(event){
-    	console.log(event.keyCode);
 	    if(event.keyCode == LEFT_CODE){
 	    	tet.moveLeft();
 	    }
@@ -20,13 +19,13 @@ function start(){
 	    }
 
 	});
-    
+
     interval = setInterval(tet.mainLoop, 200);
 }
 
 
 function game(){
-    
+
 }
 
 function endGame() {
