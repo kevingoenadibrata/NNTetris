@@ -24,8 +24,8 @@ class Tetris{
 
 
     drawGrid = () => {
-        var bw = this.tileSize * 10;
-        var bh = this.tileSize * 22;
+        var bw = this.tileSize * this.cols;
+        var bh = this.tileSize * this.rows;
 
         this.ctx.fillStyle = 'white';
         this.ctx.fillRect(0, this.topPad, this.cols * this.tileSize, this.rows * this.tileSize);
@@ -52,7 +52,7 @@ class Tetris{
     }
 
     spawnPiece = () => {
-        var shapeId = Math.floor((Math.random() * NUM_SHAPE) + 1);
+        var shapeId = Math.floor((Math.random() * NUM_SHAPE));
         return shapeId;
     }
 
@@ -69,6 +69,10 @@ class Tetris{
         //move left if valid
         for (var i = 0; i < this.activePiece.cells[this.activePiece.currRot].length; i++) {
             this.activePiece.cells[i].x = this.activePiece.cells[i].x - 1;
+
+            //reset grid color val to 0, white
+
+            //set val of grid to 1
         }
 
     }
@@ -86,6 +90,10 @@ class Tetris{
         //move left if right
         for (var i = 0; i < this.activePiece.cells[this.activePiece.currRot].length; i++) {
             this.activePiece.cells[i].x = this.activePiece.cells[i].x + 1;
+
+            //reset grid color val to 0, white
+
+            //set val of grid to 1
         }
 
     }
@@ -95,6 +103,38 @@ class Tetris{
     }
 
     dropblock = () => {
+
+        //check the y border line
+        var y_border = this.grid[0].length-1;
+
+        var difference = -1; //initially don't know how much to go down
+
+        for (var i = 0; i < this.activePiece.cells[this.activePiece.currRot].length; i++) {
+            //get grid perspective
+            var currX = this.activePiece.cells[i].x;
+            var currY = this.activePiece.cells[i].y+2;
+
+            while(currY+1 < this.grid[0].length-1 && this.grid[currX][currY+1] != 2){
+                currY++;
+            }
+
+            //get the lowest border line y and the minimal difference of going down
+            if(currY < y_border || currY - this.activePiece.cells[i].y + 2 < difference){
+                y_border = currY;
+                difference = currY - this.activePiece.cells[i].y + 2;
+            }
+        }
+
+        //drop block
+        for (var i = 0; i < this.activePiece.cells[this.activePiece.currRot].length; i++) {
+
+            // reset current grid status
+
+            // check here if there is a bug
+            this.activePiece.cells[i].y = this.activePiece.cells[i].y + difference;
+
+            //update next grid status
+        }
 
     }
 }
