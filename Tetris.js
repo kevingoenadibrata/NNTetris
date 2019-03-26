@@ -114,8 +114,8 @@ class Tetris{
     }
 
     drawGrid = () => {
-        var bw = this.tileSize * 10;
-        var bh = this.tileSize * 22;
+        var bw = this.tileSize * this.cols;
+        var bh = this.tileSize * this.rows;
 
         this.ctx.fillStyle = 'white';
         this.ctx.fillRect(0, this.topPad, this.cols * this.tileSize, this.rows * this.tileSize);
@@ -149,5 +149,146 @@ class Tetris{
     drawCell = (cell) => {
         this.ctx.fillStyle = 'rgb(147, 39, 129)';
         this.ctx.fillRect(this.tileSize * cell.x, this.tileSize * cell.y + this.topPad, this.tileSize, this.tileSize);
+    }
+
+    spawnPiece = () => {
+        var shapeId = Math.floor((Math.random() * NUM_SHAPE));
+        return shapeId;
+    }
+
+
+    moveLeft = () => {
+        console.log("left");
+        //check valid to move left
+        var valid = true;
+        for (var i = 0; i < this.activePiece.getCurrentCells().length; i++) {
+            if(this.activePiece.getCurrentCells()[i].x - 1 < 0){
+                valid = false;
+            }
+            else if(this.grid[this.activePiece.getCurrentCells()[i].x - 1][this.activePiece.getCurrentCells()[i].y+2].val == 2)
+                valid = false;
+        }
+
+        //move left if valid
+        if(valid){
+            for (var i = 0; i < this.activePiece.cells.length; i++) {
+                for (var j = 0; j < this.activePiece.cells[i].length; j++) {
+                    var currX = this.activePiece.cells[i][j].x;
+                    var currY = this.activePiece.cells[i][j].y + 2;
+                    
+                    //reset grid color val to 0, white
+                    if(i == this.activePiece.currentRotation){
+                        this.grid[currX][currY].val = 0;
+                    }
+
+                    this.activePiece.cells[i][j].x = this.activePiece.cells[i][j].x - 1;
+                    // currX = this.activePiece.cells[i][j].x;
+                }  
+            }
+
+            for (var i = 0; i < this.activePiece.getCurrentCells().length; i++) {
+                var currX = this.activePiece.getCurrentCells()[i].x;
+                var currY = this.activePiece.getCurrentCells()[i].y+2;
+
+                //set val of grid to 1
+                this.grid[currX][currY].val = 1;
+                    
+                
+            }
+            
+
+            this.drawGrid();
+            this.drawPieces();
+        }
+        
+
+    }
+
+    moveRight = () => {
+        console.log("right");
+
+        //check valid to move right
+        var valid = true;
+        for (var i = 0; i < this.activePiece.getCurrentCells().length; i++) {
+            if(this.activePiece.getCurrentCells()[i].x + 1 >= this.grid.length){
+                valid = false;
+            }
+            else if(this.grid[this.activePiece.getCurrentCells()[i].x + 1][this.activePiece.getCurrentCells()[i].y+2].val == 2)
+                valid = false;
+        }
+
+        //move right if valid
+        if(valid){
+            for (var i = 0; i < this.activePiece.cells.length; i++) {
+                for (var j = 0; j < this.activePiece.cells[i].length; j++) {
+                    var currX = this.activePiece.cells[i][j].x;
+                    var currY = this.activePiece.cells[i][j].y + 2;
+                    
+                    //reset grid color val to 0, white
+                    if(i == this.activePiece.currentRotation){
+                        this.grid[currX][currY].val = 0;
+                    }
+
+                    this.activePiece.cells[i][j].x = this.activePiece.cells[i][j].x + 1;
+                    // currX = this.activePiece.cells[i][j].x;
+                }  
+            }
+
+            for (var i = 0; i < this.activePiece.getCurrentCells().length; i++) {
+                var currX = this.activePiece.getCurrentCells()[i].x;
+                var currY = this.activePiece.getCurrentCells()[i].y+2;
+
+                //set val of grid to 1
+                this.grid[currX][currY].val = 1;
+                    
+                
+            }
+            
+
+            this.drawGrid();
+            this.drawPieces();
+        }
+        
+
+    }
+
+    rotate = () => {
+
+    }
+
+    dropblock = () => {
+
+    //     //check the y border line
+    //     var y_border = this.grid[0].length-1;
+
+    //     var difference = -1; //initially don't know how much to go down
+
+    //     for (var i = 0; i < this.activePiece.cells[this.activePiece.currentRotation].length; i++) {
+    //         //get grid perspective
+    //         var currX = this.activePiece.cells[i].x;
+    //         var currY = this.activePiece.cells[i].y+2;
+
+    //         while(currY+1 < this.grid[0].length-1 && this.grid[currX][currY+1] != 2){
+    //             currY++;
+    //         }
+
+    //         //get the lowest border line y and the minimal difference of going down
+    //         if(currY < y_border || currY - this.activePiece.cells[i].y + 2 < difference){
+    //             y_border = currY;
+    //             difference = currY - this.activePiece.cells[i].y + 2;
+    //         }
+    //     }
+
+    //     //drop block
+    //     for (var i = 0; i < this.activePiece.cells[this.activePiece.currentRotation].length; i++) {
+
+    //         // reset current grid status
+
+    //         // check here if there is a bug
+    //         this.activePiece.cells[i].y = this.activePiece.cells[i].y + difference;
+
+    //         //update next grid status
+    //     }
+
     }
 }
