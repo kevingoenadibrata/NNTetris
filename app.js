@@ -1,7 +1,8 @@
 var tet;
+var interval;
 
 function start(){
-    tet = new Tetris('canv');
+    tet = new Tetris('canv', endGame);
 
     window.addEventListener('keydown', function(event){
     	console.log(event.keyCode);
@@ -19,7 +20,8 @@ function start(){
 	    }
 
 	});
-    setInterval(tet.mainLoop, 100);
+    
+    interval = setInterval(tet.mainLoop, 20);
 }
 
 
@@ -27,3 +29,6 @@ function game(){
     
 }
 
+function endGame() {
+    clearInterval(interval);
+}
