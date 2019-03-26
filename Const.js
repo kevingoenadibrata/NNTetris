@@ -180,17 +180,22 @@ let OShape = cellify([
 ], 2);
 
 const SHAPE_DICT = {
-    0: IShape,
-    1: JShape,
-    2: LShape,
-    3: SShape,
-    4: ZShape,
-    5: TShape,
-    6: OShape   
+    0: copyArray(IShape),
+    1: copyArray(JShape),
+    2: copyArray(LShape),
+    3: copyArray(SShape),
+    4: copyArray(ZShape),
+    5: copyArray(TShape),
+    6: copyArray(OShape)   
 };
+
+function copyArray(obj){
+    return JSON.parse(JSON.stringify(obj));
+}
 
 const NUM_SHAPE = 7;
 const LEFT_CODE = 37;
 const UP_CODE = 38;
 const RIGHT_CODE = 39;
 const SPACE_CODE = 40;
+
