@@ -11,6 +11,8 @@ class Tetris{
         this.bag = [];
         this.grid = [];
         this.activePiece = new ActivePiece(this.spawnPiece());
+        this.gridLines = new Array(this.rows + 2).fill(0);
+
         /*           */
 
         for(let i = 0; i < this.cols; i++){
@@ -49,7 +51,6 @@ class Tetris{
             let currY = currCell[i].y;
 
             if (currY + 1 < 0 && !this.canFall()) {
-                console.log("Game Over");
                 this.reset();
                 // delete interval
                 // print out game over
@@ -62,11 +63,47 @@ class Tetris{
         for (let j = 0; j < this.activePiece.getCurrentCells().length; j++) {
             const cell = this.activePiece.cells[this.activePiece.currentRotation][j];
             this.grid[cell.x][cell.y+2].val = 2;
+            this.countCellLines(cell.y+2);
         }
         const spawn = this.spawnPiece();
         this.activePiece.cells = copyArray(SHAPE_DICT[spawn]);
         this.activePiece.blockType = spawn;
 
+    }
+
+    countCellLines = (y) => {
+        // number of counts of blocks in each line
+        ++this.gridLines[y];
+        if (this.gridLines[y] == 10) {
+            this.clearLines(y);
+        }
+    }
+
+    clearLines = (index) => {
+        console.log("Need to clear line");
+        // splice the array
+        // push 0 to front of array
+        this.gridLines.splice(index, 1);
+        this.gridLines.unshift(0);
+        
+        console.log(this.grid);
+
+        // clear the line
+        for (let x = 0; x < this.grid.length; x++) {
+            
+            // shift by 1 downward
+            let needToBeUpdated = this.grid[x].slice(0,index);
+            needToBeUpdated.map(item => item.y += 1);
+
+            // splice arrays
+            this.grid[x].splice(index, 1);
+
+            // add new cell object
+            this.grid[x].unshift(new Cell(x, -2, 0, ""));
+        }
+
+        this.drawGrid();
+        this.drawPieces();
     }
 
     fallPiece = () => {
@@ -94,8 +131,8 @@ class Tetris{
     }
 
     spawnPiece = () => {
-        console.log(this.bag);
-        if(this.bag.length == 0) this.bag = this.shuffle([0,1,2,3,4,5,6]);
+        // if(this.bag.length == 0) this.bag = this.shuffle([0,1,2,3,4,5,6]);
+        if(this.bag.length == 0) this.bag = [0,0,6,0,0,6];
 
         return this.bag.pop();
     }
@@ -310,4 +347,6 @@ class Tetris{
     //     }
 
     }
+
 }
+
