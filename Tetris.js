@@ -8,7 +8,7 @@ class Tetris{
         this.topPad = 50;
         this.canvas = document.getElementById(canvId);
         this.ctx = this.canvas.getContext('2d');
-        this.bag = [];
+        this.bag = this.shuffle([0,1,2,3,4,5,6]);
         this.grid = [];
         this.activePiece = new ActivePiece(this.spawnPiece());
         /*           */
@@ -30,6 +30,10 @@ class Tetris{
             this.fallPiece();
         } else {
             this.lockPiece();
+            const spawn = this.spawnPiece();
+            this.activePiece.currentRotation = 0;
+            this.activePiece.cells = copyArray(SHAPE_DICT[spawn]);
+            this.activePiece.blockType = spawn;
         }
 
         // game over
@@ -63,10 +67,6 @@ class Tetris{
             const cell = this.activePiece.cells[this.activePiece.currentRotation][j];
             this.grid[cell.x][cell.y+2].val = 2;
         }
-        const spawn = this.spawnPiece();
-        this.activePiece.cells = copyArray(SHAPE_DICT[spawn]);
-        this.activePiece.blockType = spawn;
-
     }
 
     fallPiece = () => {
@@ -95,9 +95,9 @@ class Tetris{
 
     spawnPiece = () => {
         console.log(this.bag);
+        let returnValue = this.bag.pop();
         if(this.bag.length == 0) this.bag = this.shuffle([0,1,2,3,4,5,6]);
-
-        return this.bag.pop();
+        return returnValue;
     }
 
     shuffle = (a) => {
@@ -158,6 +158,8 @@ class Tetris{
         }
         this.ctx.strokeStyle = "rgb(208, 208, 208)";
         this.ctx.stroke();
+
+        this.drawNext(this.bag[this.bag.length-1]);
     }
 
     drawPieces = () => {
@@ -173,6 +175,17 @@ class Tetris{
     drawCell = (cell) => {
         this.ctx.fillStyle = cell.color;
         this.ctx.fillRect(this.tileSize * cell.x, this.tileSize * cell.y + this.topPad, this.tileSize, this.tileSize);
+    }
+
+    drawNext = (id) => {
+        let shape = copyArray(SHAPE_DICT[id])[0];
+        let color = shape[0].color;
+
+        this.ctx.fillStyle = color;
+        for(let i = 0; i < shape.length; i++){
+            this.ctx.fillRect(shape[i].x*10, 30 + shape[i].y*10, 10, 10);
+        }
+
     }
 
 
@@ -275,7 +288,7 @@ class Tetris{
         var valid = false;
         var initRotation = this.activePiece.currentRotation;
         var rotationIdxResult = this.activePiece.currentRotation;
-
+        console.time('start');
         while(!valid && (rotationIdxResult+1)%4 != initRotation){
             rotationIdxResult = (rotationIdxResult+1)%4;
 
@@ -307,12 +320,17 @@ class Tetris{
             }
 
         }
+        console.timeEnd('start');
+        console.time('draw');
 
         if(valid){
             this.setGridByBlock(this.activePiece.getCurrentCells(), 0);
             this.activePiece.currentRotation = rotationIdxResult;
             this.setGridByBlock(this.activePiece.getCurrentCells(), 1);
+            this.drawGrid();
+            this.drawPieces();
         }
+        console.timeEnd('draw');
     }
 
     setGridByBlock = (block, val) => {
