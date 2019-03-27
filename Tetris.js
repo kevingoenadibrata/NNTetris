@@ -64,8 +64,12 @@ class Tetris{
 
     lockPiece = () => {
         // copy active piece to grid
+        console.log("LOCK");
+        if(this.activePiece.lockStatus) return;
+        this.activePiece.lockStatus = true;
         for (let j = 0; j < this.activePiece.getCurrentCells().length; j++) {
             const cell = this.activePiece.cells[this.activePiece.currentRotation][j];
+            console.log("cell: ", cell);
             this.grid[cell.x][cell.y+2].val = 2;
             this.countCellLines(cell.y+2);
         }
@@ -74,7 +78,11 @@ class Tetris{
     countCellLines = (y) => {
         // number of counts of blocks in each line
         ++this.gridLines[y];
+        //console.log("y: ", y);
+        //console.log(this.gridLines.slice());
+        //console.log("in count cell");
         if (this.gridLines[y] == 10) {
+            console.log("Go to clearLines");
             this.clearLines(y);
         }
     }
@@ -132,6 +140,7 @@ class Tetris{
 
     spawnPiece = () => {
         console.log(this.bag);
+        if(this.activePiece) this.activePiece.lockStatus = false;
         let returnValue = this.bag.pop();
         if(this.bag.length == 0) this.bag = this.shuffle([0,1,2,3,4,5,6]);
         return returnValue;
