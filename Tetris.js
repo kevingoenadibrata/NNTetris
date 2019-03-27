@@ -64,15 +64,15 @@ class Tetris{
 
     lockPiece = () => {
         // copy active piece to grid
-        console.log("LOCK");
         if(this.activePiece.lockStatus) return;
         this.activePiece.lockStatus = true;
+        let linesCleared = 0;
         for (let j = 0; j < this.activePiece.getCurrentCells().length; j++) {
             const cell = this.activePiece.cells[this.activePiece.currentRotation][j];
-            console.log("cell: ", cell);
             this.grid[cell.x][cell.y+2].val = 2;
-            this.countCellLines(cell.y+2);
+            linesCleared += this.countCellLines(cell.y+2);
         }
+        console.log("LINES CLEARED: " + linesCleared);
     }
 
     countCellLines = (y) => {
@@ -82,19 +82,16 @@ class Tetris{
         //console.log(this.gridLines.slice());
         //console.log("in count cell");
         if (this.gridLines[y] == 10) {
-            console.log("Go to clearLines");
             this.clearLines(y);
-        }
+            return 1;
+        } else return 0;
     }
 
     clearLines = (index) => {
-        console.log("Need to clear line");
         // splice the array
         // push 0 to front of array
         this.gridLines.splice(index, 1);
         this.gridLines.unshift(0);
-        
-        console.log(this.grid);
 
         // clear the line
         for (let x = 0; x < this.grid.length; x++) {
@@ -139,7 +136,7 @@ class Tetris{
     }
 
     spawnPiece = () => {
-        console.log(this.bag);
+
         if(this.activePiece) this.activePiece.lockStatus = false;
         let returnValue = this.bag.pop();
         if(this.bag.length == 0) this.bag = this.shuffle([0,1,2,3,4,5,6]);
@@ -334,7 +331,7 @@ class Tetris{
         var valid = false;
         var initRotation = this.activePiece.currentRotation;
         var rotationIdxResult = this.activePiece.currentRotation;
-        console.time('start');
+
         while(!valid && (rotationIdxResult+1)%4 != initRotation){
             rotationIdxResult = (rotationIdxResult+1)%4;
 
@@ -366,8 +363,6 @@ class Tetris{
             }
 
         }
-        console.timeEnd('start');
-        console.time('draw');
 
         if(valid){
             this.setGridByBlock(this.activePiece.getCurrentCells(), 0);
@@ -376,7 +371,6 @@ class Tetris{
             this.drawGrid();
             this.drawPieces();
         }
-        console.timeEnd('draw');
     }
 
     setGridByBlock = (block, val) => {
