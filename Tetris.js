@@ -10,6 +10,7 @@ class Tetris{
         this.bag = this.shuffle([0,1,2,3,4,5,6]);
         this.isPlaying = true;
         this.grid = [];
+        this.score = 0;
         this.activePiece = new ActivePiece(this.spawnPiece());
         this.gridLines = new Array(this.rows + 2).fill(0);
 
@@ -73,6 +74,7 @@ class Tetris{
         delete this.activePiece;
         delete this.gridLines;
 
+        this.score = 0;
         this.grid = [];
         this.activePiece = new ActivePiece(this.spawnPiece());
         this.gridLines = new Array(this.rows + 2).fill(0);
@@ -99,6 +101,23 @@ class Tetris{
             linesCleared += this.countCellLines(cell.y+2);
         }
         console.log("LINES CLEARED: " + linesCleared);
+
+        switch (linesCleared) {
+            case 1:
+                linesCleared += 100;
+                break;
+            case 2:
+                linesCleared += 300;
+                break;
+            case 3:
+                linesCleared += 500;
+                break;
+            case 4:
+                linesCleared += 800;
+                break;
+            default:
+                linesCleared += 0;
+        }
     }
 
     countCellLines = (y) => {
