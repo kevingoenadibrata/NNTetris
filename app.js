@@ -20,7 +20,7 @@ function start(){
 
 	});
 
-    interval = setInterval(tet.mainLoop, 200);
+    interval = setInterval(tet.mainLoop, 400);
 }
 
 
