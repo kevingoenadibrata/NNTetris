@@ -1,7 +1,6 @@
 class Tetris{
-    constructor(canvId, reset_func){
+    constructor(canvId){
         /* VARIABLES */
-        this.reset = reset_func;
         this.cols = 10;
         this.rows = 22;
         this.tileSize = 15;
@@ -9,6 +8,7 @@ class Tetris{
         this.canvas = document.getElementById(canvId);
         this.ctx = this.canvas.getContext('2d');
         this.bag = this.shuffle([0,1,2,3,4,5,6]);
+        this.isPlaying = true;
         this.grid = [];
         this.activePiece = new ActivePiece(this.spawnPiece());
         this.gridLines = new Array(this.rows + 2).fill(0);
@@ -28,23 +28,25 @@ class Tetris{
 
     mainLoop = () => {
         // spawn piece
-        if (this.canFall()) {
-            this.fallPiece();
-        } else {
-            this.lockPiece();
-            const spawn = this.spawnPiece();
-            this.activePiece.currentRotation = 0;
-            this.activePiece.cells = copyArray(SHAPE_DICT[spawn]);
-            this.activePiece.blockType = spawn;
-        }
+        if (this.isPlaying) {
+            if (this.canFall()) {
+                this.fallPiece();
+            } else {
+                this.lockPiece();
+                const spawn = this.spawnPiece();
+                this.activePiece.currentRotation = 0;
+                this.activePiece.cells = copyArray(SHAPE_DICT[spawn]);
+                this.activePiece.blockType = spawn;
+            }
 
-        // game over
-        if (this.gameOver()) {
-            console.log("Game Over");
-        }
+            // game over
+            if (this.gameOver()) {
+                console.log("Game Over");
+            }
 
-        this.drawGrid();
-        this.drawPieces();
+            this.drawGrid();
+            this.drawPieces();
+        }
     }
 
     gameOver = () => {
@@ -55,11 +57,35 @@ class Tetris{
             let currY = currCell[i].y;
 
             if (currY + 1 < 0 && !this.canFall()) {
-                this.reset();
+                this.isPlaying = false;
+                console.log("Game Over");
                 // delete interval
                 // print out game over
             }
         }
+    }
+
+    reset = () => {
+        this.bag = this.shuffle([0,1,2,3,4,5,6]);
+        this.isPlaying = true;
+        
+        delete this.grid;
+        delete this.activePiece;
+        delete this.gridLines;
+
+        this.grid = [];
+        this.activePiece = new ActivePiece(this.spawnPiece());
+        this.gridLines = new Array(this.rows + 2).fill(0);
+
+        for(let i = 0; i < this.cols; i++){
+            let temp = [];
+            for(let j = 0; j < this.rows + 2; j++){
+                temp.push(new Cell(i, j-2, 0, ""));
+            }
+            this.grid.push(temp);
+        }
+
+        this.drawGrid();
     }
 
     lockPiece = () => {
